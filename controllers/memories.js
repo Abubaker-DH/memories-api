@@ -1,8 +1,8 @@
-import Memory from "../models/memory.js";
+import Memory, { validateMemory } from "../models/memory.js";
 
 export const getMemories = async (req, res) => {
   try {
-    const memories = await Memory.find();
+    const memories = await Memory.find().poubulate(req.userId);
     res.status(200).json(memories);
   } catch (error) {
     res.status(404).json({ message: error.message });
@@ -13,7 +13,7 @@ export const getMemory = async (req, res) => {
   const { id } = req.params;
   if (!req.userId) return res.json({ message: "Unauthenticated.." });
   try {
-    const memories = await Memory.findById(id);
+    const memories = await Memory.findById(id).poubulate(req.userId);
     res.status(200).json(memories);
   } catch (error) {
     res.status(404).json({ message: error.message });
@@ -22,7 +22,12 @@ export const getMemory = async (req, res) => {
 
 export const createMemory = async (req, res) => {
   const memory = req.body;
-  const newMemory = new Memory(memory);
+  const userId = req.userId;
+
+  const { error } = validateMemory(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  const newMemory = new Memory({ ...memory, userId });
   try {
     await newMemory.save();
     res.status(201).json(newMemory);

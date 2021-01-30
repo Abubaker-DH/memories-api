@@ -4,7 +4,7 @@ const auth = async (req, res, next) => {
   let decodedData;
   try {
     // get the token from header in auth[] after the " "
-    const token = req.headers.authorization.split(" ")[1];
+    const token = req.headers.Authorization.split(" ")[1];
 
     const isCoustomAuth = token.lenght < 500;
 
@@ -15,7 +15,7 @@ const auth = async (req, res, next) => {
     } else {
       // with google token
       decodedData = jwt.decode(token);
-
+      // sud is what google use to differentiate every google user
       req.userId = decodedData?.sub;
     }
     next();
