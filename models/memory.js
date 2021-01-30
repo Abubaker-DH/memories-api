@@ -5,10 +5,11 @@ const meomrySchema = mongoose.Schema({
   message: String,
   creator: String,
   tags: [String],
+  userId: String,
   selectedFile: String,
-  likeCount: {
-    type: Number,
-    default: 0,
+  likes: {
+    type: [String],
+    default: [],
   },
   createAt: {
     type: Date,
