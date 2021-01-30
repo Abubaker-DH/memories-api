@@ -4,12 +4,14 @@ import {
   createMemory,
   updateMemory,
   deleteMemory,
+  likeMemory,
 } from "../controllers/memories.js";
 const router = express.Router();
 
 router.get("/", getMemories);
 router.post("/", createMemory);
-router.put("/", updateMemory);
-router.delete("/", deleteMemory);
+router.put("/:id", updateMemory);
+router.delete("/:id", deleteMemory);
+router.patch("/:id/likeMemory", likeMemory);
 
 export default router;

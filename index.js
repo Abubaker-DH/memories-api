@@ -1,15 +1,23 @@
 import express from "express";
 import bodyParser from "body-parser";
 import mongoose from "mongoose";
+import dotenv from "dotenv";
 import cors from "cors";
+import memoryRoutes from "./routes/memories.js";
+
 const app = express();
+dotenv.config();
 
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
-
 app.use(cors());
 
-const MONGO_URL = "mongodb://localhost:27017/momeries-db";
+app.use("/memories", memoryRoutes);
+app.get("/", (req, res, next) => {
+  res.send("Hello to Memories Api");
+});
+
+const MONGO_URL = process.env.MONGO_URL;
 const PORT = process.env.PORT || 5000;
 
 mongoose

@@ -21,9 +21,42 @@ export const createMemory = async (req, res) => {
 };
 
 export const updateMemory = async (req, res) => {
-  res.send(" hhhhh");
+  const { id } = req.params;
+  const memory = req.body;
+
+  if (!mongoose.Type.ObjectId.isValid(id))
+    return res.status(404).send("Now Memory with this Id");
+
+  const updateMemory = await Memory.findByIdAndUpdate(id, memory, {
+    new: true,
+  });
+
+  res.json(updateMemory);
 };
 
 export const deleteMemory = async (req, res) => {
-  res.send(" hhhhh");
+  const { id } = req.params;
+
+  if (!mongoose.Type.ObjectId.isValid(id))
+    return res.status(404).send("Now Memory with this Id");
+
+  await Memory.findByIdAndRemove(id);
+
+  res.json({ message: "Memory deleted successfully" });
+};
+
+export const likeMemory = async (req, res) => {
+  const { id } = req.params;
+
+  if (!mongoose.Type.ObjectId.isValid(id))
+    return res.status(404).send("Now Memory with this Id");
+
+  const memory = await Memory.findById(id);
+  const updatedMemory = await Memory.findByIdAndRemove(
+    id,
+    { likeCount: memory.likeCount + 1 },
+    { new: true }
+  );
+
+  res.json(updatedMemory);
 };
